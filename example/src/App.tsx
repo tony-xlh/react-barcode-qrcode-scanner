@@ -13,6 +13,7 @@ const presetResolutions = [
 function App() {
   const [isActive,setIsActive] = React.useState(true);
   const [initialized,setInitialized] = React.useState(false);
+  const [runtimeSettings,setRuntimeSettings] = React.useState(undefined as string|undefined);
   const [opened,setOpened] = React.useState(false);
   const [cameras,setCameras] = React.useState([] as MediaDeviceInfo[]);
   const [selectedCameraLabel,setSelectedCameraLabel] = React.useState("");
@@ -62,6 +63,14 @@ function App() {
     setInitialized(true);
   }
 
+  const scanQRCodeChanged = (e:any) => {
+    if (e.target.checked === true) {
+      setRuntimeSettings("{\"ImageParameter\":{\"BarcodeFormatIds\":[\"BF_QR_CODE\"],\"Description\":\"\",\"Name\":\"Settings\"},\"Version\":\"3.0\"}");
+    }else{
+      setRuntimeSettings("{\"ImageParameter\":{\"BarcodeFormatIds\":[\"BF_ALL\"],\"Description\":\"\",\"Name\":\"Settings\"},\"Version\":\"3.0\"}");
+    }
+  }
+
   return (
     <div className="container">
       <div className="barcode-scanner">
@@ -71,6 +80,7 @@ function App() {
             drawOverlay={true}
             desiredCamera={desiredCamera}
             desiredResolution={desiredResolution}
+            runtimeSettings={runtimeSettings}
             onScanned={onScanned}
             onOpened={onOpened}
             onClosed={onClosed}
@@ -104,6 +114,7 @@ function App() {
             </select>
           </div>
           <button onClick={() => setIsActive(!isActive)}>{isActive ? "Stop" : "Start"}</button>
+          <label><input type="checkbox" onChange={(e) => scanQRCodeChanged(e)}></input>Scan QR codes only</label>
         </div>
       </div>
     </div>
