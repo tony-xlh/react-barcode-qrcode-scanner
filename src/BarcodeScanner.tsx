@@ -31,7 +31,7 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
       BarcodeReader.engineResourcePath = "https://unpkg.com/dynamsoft-javascript-barcode@9.0.2/dist/";
       reader.current = await BarcodeReader.createInstance();
       if (props.runtimeSettings) {
-        await reader.current.updateRuntimeSettings(props.runtimeSettings);
+        await (reader.current as BarcodeReader).initRuntimeSettingsWithString(props.runtimeSettings);
       }
       if (props.onInitialized) {
         props.onInitialized(reader.current);
@@ -43,7 +43,7 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
 
   React.useEffect(()=>{
     if (props.runtimeSettings && reader.current) {
-      reader.current.updateRuntimeSettings(props.runtimeSettings);
+      (reader.current as BarcodeReader).initRuntimeSettingsWithString(props.runtimeSettings);
     }
   },[props.runtimeSettings])
 
@@ -131,7 +131,7 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
           x={result.localizationResult.x1}
           y={result.localizationResult.y1}
           fill="red"
-          font-size="20"
+          fontSize="20"
           >{result.barcodeText}</text>
         ))}
       </svg>
