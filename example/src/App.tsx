@@ -1,6 +1,7 @@
 import { BarcodeScanner } from "react-barcode-qrcode-scanner";
 import React from 'react';
 import "./App.css";
+import loading from "./loading.svg"
 import { TextResult } from "dynamsoft-javascript-barcode";
 
 const presetResolutions = [
@@ -11,6 +12,8 @@ const presetResolutions = [
 
 function App() {
   const [isActive,setIsActive] = React.useState(true);
+  const [initialized,setInitialized] = React.useState(false);
+  const [opened,setOpened] = React.useState(false);
   const [cameras,setCameras] = React.useState([] as MediaDeviceInfo[]);
   const [selectedCameraLabel,setSelectedCameraLabel] = React.useState("");
   const [desiredCamera, setDesiredCamera] = React.useState("founder");
@@ -21,12 +24,14 @@ function App() {
   const onOpened = (cam:HTMLVideoElement,camLabel:string) => {
     console.log("opened");
     console.log(camLabel);
+    setOpened(true);
     setCurrentResolution(cam.videoWidth+"x"+cam.videoHeight);
     setSelectedCameraLabel(camLabel);
   }
 
   const onClosed = () => {
     console.log("closed");
+    setOpened(false);
   }
 
   const onScanned = (results:TextResult[]) => {
@@ -53,6 +58,10 @@ function App() {
     alert(result.barcodeText);
   }
 
+  const onInitialized = () => {
+    setInitialized(true);
+  }
+
   return (
     <div className="container">
       <div className="barcode-scanner">
@@ -67,7 +76,11 @@ function App() {
             onClosed={onClosed}
             onClicked={onClicked}
             onDeviceListLoaded={onDeviceListLoaded}
+            onInitialized={onInitialized}
           >
+            {(!initialized || !opened && isActive) &&
+              <img src={loading} className="loading" alt="loading" />
+            }
           </BarcodeScanner>
         </div>
         <div>
