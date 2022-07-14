@@ -16,7 +16,9 @@
     "url": "git+https://github.com/xulihang/react-barcode-qrcode-scanner.git"
   },
   "keywords": [
-    "barcode"
+    "barcode",
+    "qrcode",
+    "react"
   ],
   "author": "Xu Lihang",
   "license": "MIT",
