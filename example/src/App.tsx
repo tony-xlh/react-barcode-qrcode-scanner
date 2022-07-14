@@ -1,6 +1,7 @@
 import { BarcodeScanner } from "react-barcode-qrcode-scanner";
 import React from 'react';
 import "./App.css";
+import { TextResult } from "dynamsoft-javascript-barcode";
 
 const presetResolutions = [
   {label:"ask 1920x1080", value:{width:1920,height:1080}},
@@ -28,6 +29,10 @@ function App() {
     console.log("closed");
   }
 
+  const onScanned = (results:TextResult[]) => {
+    console.log(results);
+  }
+
   const onDeviceListLoaded = (devices:MediaDeviceInfo[]) => {
     console.log(devices);
     setCameras(devices);
@@ -52,6 +57,7 @@ function App() {
             isActive={isActive}
             desiredCamera={desiredCamera}
             desiredResolution={desiredResolution}
+            onScanned={onScanned}
             onOpened={onOpened}
             onClosed={onClosed}
             onDeviceListLoaded={onDeviceListLoaded}
