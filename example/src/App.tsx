@@ -13,7 +13,7 @@ function App() {
   const [isActive,setIsActive] = React.useState(true);
   const [cameras,setCameras] = React.useState([] as MediaDeviceInfo[]);
   const [selectedCameraLabel,setSelectedCameraLabel] = React.useState("");
-  const [desiredCamera, setDesiredCamera] = React.useState("back");
+  const [desiredCamera, setDesiredCamera] = React.useState("founder");
   const [desiredResolution, setDesiredResolution] = React.useState({width:1280,height:720});
   const [currentResolution, setCurrentResolution] = React.useState("");
   const resSel = React.useRef(null);
@@ -55,6 +55,7 @@ function App() {
         <div className="vision-camera">
           <BarcodeScanner 
             isActive={isActive}
+            drawOverlay={true}
             desiredCamera={desiredCamera}
             desiredResolution={desiredResolution}
             onScanned={onScanned}

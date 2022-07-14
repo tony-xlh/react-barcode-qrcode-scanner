@@ -6,6 +6,7 @@ export interface ScannerProps extends CameraProps{
   runtimeSettings?: string;
   license?: string;
   interval?:number;
+  drawOverlay?: boolean;
   onInitialized?: (reader:BarcodeReader) => void;
   onScanned?: (results:TextResult[]) => void;
 }
@@ -16,6 +17,8 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
   const reader = React.useRef(null);
   const mounted = React.useRef(false);
   const decoding = React.useRef(false);
+  const [viewBox,setViewBox] = React.useState("0 0 1280 720");
+  const [barcodeResults,setBarcodeResults] = React.useState([] as TextResult[]);
   
   React.useEffect(()=>{
     const init = async () => {
@@ -48,6 +51,7 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
       if (decoding.current === false && reader.current && camera.current) {
         decoding.current = true;
         const results = await reader.current.decode(camera.current);
+        setBarcodeResults(results);
         if (props.onScanned) {
           props.onScanned(results);
         }
@@ -68,6 +72,7 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
 
   const onOpened = (cam:HTMLVideoElement,camLbl:string) => {
     camera.current = cam;
+    setViewBox("0 0 "+cam.videoWidth+" "+cam.videoHeight);
     startScanning();
     if (props.onOpened) {
       props.onOpened(cam,camLbl);
@@ -78,6 +83,51 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
     stopScanning();
     if (props.onClosed) {
       props.onClosed();
+    }
+  }
+
+  const getPointsData = (result:TextResult) => {
+    const lr = result.localizationResult;
+    let pointsData = lr.x1+","+lr.y1 + " ";
+    pointsData = pointsData+ lr.x2+","+lr.y2 + " ";
+    pointsData = pointsData+ lr.x3+","+lr.y3 + " ";
+    pointsData = pointsData+ lr.x4+","+lr.y4;
+    return pointsData;
+  }
+
+  const renderSVGOverlay = () => {
+    if (props.drawOverlay === true && barcodeResults.length>0) {
+      return (
+        <svg 
+        preserveAspectRatio="xMidYMid slice"
+        viewBox={viewBox}
+        xmlns="<http://www.w3.org/2000/svg>"
+        style={{
+          position:'absolute',
+          top: 0,
+          left: 0,
+          width:'100%',
+          height:'100%'}}>
+        {barcodeResults.map((result,idx) => (
+          <polygon key={"poly-"+idx} xmlns="<http://www.w3.org/2000/svg>"
+          points={getPointsData(result)}
+          style={{
+            fill:"rgba(85,240,40,0.5)",
+            stroke: "green",
+            strokeWidth: 1
+          }}
+          />
+        ))}
+        {barcodeResults.map((result,idx) => (
+          <text key={"text-"+idx} xmlns="<http://www.w3.org/2000/svg>"
+          x={result.localizationResult.x1}
+          y={result.localizationResult.y1}
+          fill="red"
+          font-size="20"
+          >{result.barcodeText}</text>
+        ))}
+      </svg>
+      )
     }
   }
   
@@ -93,6 +143,7 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
       onDeviceListLoaded={props.onDeviceListLoaded}
     >
       {props.children}
+      {renderSVGOverlay()}
     </VisionCamera>
   )
 }
