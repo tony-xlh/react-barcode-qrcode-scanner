@@ -32,6 +32,6 @@
   },
   "dependencies": {
     "dynamsoft-javascript-barcode": "^9.0.2",
-    "react-vision-camera": "^1.0.0"
+    "react-vision-camera": "^1.0.1"
   }
 }

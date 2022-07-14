@@ -76,6 +76,7 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
   return (
     <VisionCamera
       isActive={props.isActive}
+      isPause={props.isPause}
       facingMode={props.facingMode}
       desiredCamera={props.desiredCamera}
       desiredResolution={props.desiredResolution}
