@@ -21,6 +21,8 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
     const init = async () => {
       if (props.license) {
         BarcodeReader.license = props.license;
+      }else{
+        BarcodeReader.license = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ=="; // public trial license
       }
       BarcodeReader.engineResourcePath = "https://unpkg.com/dynamsoft-javascript-barcode@9.0.2/dist/";
       reader.current = await BarcodeReader.createInstance();
