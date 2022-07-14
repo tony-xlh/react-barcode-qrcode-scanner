@@ -5,6 +5,7 @@ import { CameraProps, VisionCamera } from 'react-vision-camera';
 export interface ScannerProps extends CameraProps{
   runtimeSettings?: string;
   license?: string;
+  interval?:number;
   onInitialized?: (reader:BarcodeReader) => void;
   onScanned?: (results:TextResult[]) => void;
 }
@@ -51,7 +52,12 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
         decoding.current = false;
       }
     }
-    interval.current = setInterval(decode,40);
+    if (props.interval) {
+      interval.current = setInterval(decode,props.interval);
+    }else{
+      interval.current = setInterval(decode,40);
+    }
+    
   }
 
   const stopScanning = () => {
