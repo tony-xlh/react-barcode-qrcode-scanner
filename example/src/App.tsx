@@ -17,7 +17,7 @@ function App() {
   const [opened,setOpened] = React.useState(false);
   const [cameras,setCameras] = React.useState([] as MediaDeviceInfo[]);
   const [selectedCameraLabel,setSelectedCameraLabel] = React.useState("");
-  const [desiredCamera, setDesiredCamera] = React.useState("founder");
+  const [desiredCamera, setDesiredCamera] = React.useState("back");
   const [desiredResolution, setDesiredResolution] = React.useState({width:1280,height:720});
   const [currentResolution, setCurrentResolution] = React.useState("");
   const resSel = React.useRef(null);
@@ -88,7 +88,7 @@ function App() {
             onDeviceListLoaded={onDeviceListLoaded}
             onInitialized={onInitialized}
           >
-            {(!initialized || !opened && isActive) &&
+            {((!initialized || !opened) && isActive) &&
               <img src={loading} className="loading" alt="loading" />
             }
           </BarcodeScanner>
