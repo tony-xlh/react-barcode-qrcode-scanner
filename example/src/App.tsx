@@ -49,6 +49,10 @@ function App() {
     setDesiredResolution({width:width,height:height})
   }
 
+  const onClicked = (result:TextResult) => {
+    alert(result.barcodeText);
+  }
+
   return (
     <div className="container">
       <div className="barcode-scanner">
@@ -61,6 +65,7 @@ function App() {
             onScanned={onScanned}
             onOpened={onOpened}
             onClosed={onClosed}
+            onClicked={onClicked}
             onDeviceListLoaded={onDeviceListLoaded}
           >
           </BarcodeScanner>

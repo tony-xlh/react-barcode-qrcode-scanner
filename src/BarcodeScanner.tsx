@@ -9,6 +9,7 @@ export interface ScannerProps extends CameraProps{
   drawOverlay?: boolean;
   onInitialized?: (reader:BarcodeReader) => void;
   onScanned?: (results:TextResult[]) => void;
+  onClicked?: (result:TextResult) => void;
 }
 
 const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
@@ -86,6 +87,12 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
     }
   }
 
+  const onPolygonClicked = (result:TextResult) => {
+    if (props.onClicked) {
+      props.onClicked(result);
+    }
+  }
+
   const getPointsData = (result:TextResult) => {
     const lr = result.localizationResult;
     let pointsData = lr.x1+","+lr.y1 + " ";
@@ -111,6 +118,7 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
         {barcodeResults.map((result,idx) => (
           <polygon key={"poly-"+idx} xmlns="<http://www.w3.org/2000/svg>"
           points={getPointsData(result)}
+          onClick={() => onPolygonClicked(result)}
           style={{
             fill:"rgba(85,240,40,0.5)",
             stroke: "green",
