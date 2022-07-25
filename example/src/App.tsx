@@ -2,7 +2,8 @@ import { BarcodeScanner } from "react-barcode-qrcode-scanner";
 import React from 'react';
 import "./App.css";
 import loading from "./loading.svg"
-import { TextResult } from "dynamsoft-javascript-barcode";
+import { BarcodeReader, EnumBarcodeFormat, TextResult } from "dynamsoft-javascript-barcode";
+import { ViewFinder } from "./components/ViewFinder";
 
 const presetResolutions = [
   {label:"ask 1920x1080", value:{width:1920,height:1080}},
@@ -13,13 +14,16 @@ const presetResolutions = [
 function App() {
   const [isActive,setIsActive] = React.useState(true);
   const [initialized,setInitialized] = React.useState(false);
-  const [runtimeSettings,setRuntimeSettings] = React.useState(undefined as string|undefined);
   const [opened,setOpened] = React.useState(false);
   const [cameras,setCameras] = React.useState([] as MediaDeviceInfo[]);
   const [selectedCameraLabel,setSelectedCameraLabel] = React.useState("");
   const [desiredCamera, setDesiredCamera] = React.useState("back");
   const [desiredResolution, setDesiredResolution] = React.useState({width:1280,height:720});
   const [currentResolution, setCurrentResolution] = React.useState("");
+  const [currentVideoWidth, setCurrentVideoWidth] = React.useState(1280);
+  const [currentVideoHeight, setCurrentVideoHeight] = React.useState(720);
+  const [scanRegion, setScanRegion] = React.useState({"left":200,"top":200,"width":200,"height":200});
+  const reader = React.useRef(null as null | BarcodeReader);
   const resSel = React.useRef(null);
   const camSel = React.useRef(null);
   const onOpened = (cam:HTMLVideoElement,camLabel:string) => {
@@ -27,7 +31,40 @@ function App() {
     console.log(camLabel);
     setOpened(true);
     setCurrentResolution(cam.videoWidth+"x"+cam.videoHeight);
+    setCurrentVideoWidth(cam.videoWidth);
+    setCurrentVideoHeight(cam.videoHeight);
     setSelectedCameraLabel(camLabel);
+
+    let x;
+    let y;
+    let w;
+    let h;
+    if (cam.videoWidth>cam.videoHeight) {
+      x = cam.videoWidth*0.25;
+      y = cam.videoHeight*0.25;
+      w = cam.videoWidth*0.5;
+      h = cam.videoHeight*0.5;
+    }else{
+      x = cam.videoWidth*0.15;
+      y = cam.videoHeight*0.2;
+      w = cam.videoWidth*0.70;
+      h = cam.videoHeight*0.4;
+    }
+    const region = {"left":x,"top":y,"width":w,"height":h};
+    setScanRegion(region);
+    updateRuntimeSettingsForScanRegion(region)
+  }
+
+  const updateRuntimeSettingsForScanRegion = async (region:{left:number,top:number,width:number,height:number}) => {
+    if (reader.current) {
+      const settings = await reader.current.getRuntimeSettings();
+      settings.region.regionLeft = region.left;
+      settings.region.regionTop = region.top;
+      settings.region.regionBottom = region.top + region.height;
+      settings.region.regionRight = region.left + region.width;
+      settings.region.regionMeasuredByPercentage = 0;
+      await reader.current.updateRuntimeSettings(settings);
+    }
   }
 
   const onClosed = () => {
@@ -59,16 +96,22 @@ function App() {
     alert(result.barcodeText);
   }
 
-  const onInitialized = () => {
+  const onInitialized = (dbr:BarcodeReader) => {
+    reader.current = dbr;
     setInitialized(true);
   }
 
-  const scanQRCodeChanged = (e:any) => {
-    if (e.target.checked === true) {
-      setRuntimeSettings("{\"ImageParameter\":{\"BarcodeFormatIds\":[\"BF_QR_CODE\"],\"Description\":\"\",\"Name\":\"Settings\"},\"Version\":\"3.0\"}");
-    }else{
-      setRuntimeSettings("{\"ImageParameter\":{\"BarcodeFormatIds\":[\"BF_ALL\"],\"Description\":\"\",\"Name\":\"Settings\"},\"Version\":\"3.0\"}");
+  const scanQRCodeChanged = async (e:any) => {
+    if (reader.current) {
+      const settings = await reader.current.getRuntimeSettings();
+      if (e.target.checked === true) {
+        settings.barcodeFormatIds = EnumBarcodeFormat.BF_QR_CODE;
+      }else{
+        settings.barcodeFormatIds = EnumBarcodeFormat.BF_ALL;
+      }
+      await reader.current.updateRuntimeSettings(settings);
     }
+    
   }
 
   return (
@@ -80,7 +123,6 @@ function App() {
             drawOverlay={true}
             desiredCamera={desiredCamera}
             desiredResolution={desiredResolution}
-            runtimeSettings={runtimeSettings}
             onScanned={onScanned}
             onOpened={onOpened}
             onClosed={onClosed}
@@ -88,6 +130,15 @@ function App() {
             onDeviceListLoaded={onDeviceListLoaded}
             onInitialized={onInitialized}
           >
+            {((initialized && opened) && isActive) &&
+              <ViewFinder 
+                width={currentVideoWidth}
+                height={currentVideoHeight}
+                preserveAspectRatio="xMidYMid slice"
+                scanRegion={scanRegion}
+              >
+              </ViewFinder>
+            }
             {((!initialized || !opened) && isActive) &&
               <img src={loading} className="loading" alt="loading" />
             }

@@ -24,6 +24,10 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+    <script type="module">
+      import { defineCustomElements } from 'https://cdn.jsdelivr.net/npm/viewfinder-component/dist/esm/loader.js';
+      defineCustomElements();
+    </script>
     <title>React App</title>
   </head>
   <body>
