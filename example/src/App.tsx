@@ -52,7 +52,7 @@ function App() {
     }
     const region = {"left":x,"top":y,"width":w,"height":h};
     setScanRegion(region);
-    updateRuntimeSettingsForScanRegion(region)
+    updateRuntimeSettingsForScanRegion(region);
   }
 
   const updateRuntimeSettingsForScanRegion = async (region:{left:number,top:number,width:number,height:number}) => {
@@ -64,6 +64,9 @@ function App() {
       settings.region.regionRight = region.left + region.width;
       settings.region.regionMeasuredByPercentage = 0;
       await reader.current.updateRuntimeSettings(settings);
+    }else{
+      console.log("waiting for barcode reader to be initialized.")
+      setTimeout(updateRuntimeSettingsForScanRegion,500,region);
     }
   }
 
