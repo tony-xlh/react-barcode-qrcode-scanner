@@ -10,19 +10,10 @@ export const ViewFinder = (props) => {
   },[props.style])
 
   React.useEffect(()=>{
-    if (props.scanRegion) {
-      console.log(viewFinder.current);
-      console.log(props.scanRegion);
-      viewFinder.current.scanRegion = props.scanRegion;
-    }
-  },[props.scanRegion])
-
-  React.useEffect(()=>{
-    if (props.width && props.height) {
-      viewFinder.current.width = props.width;
-      viewFinder.current.height = props.height;
-    }
-  },[props.width,props.height])
+    viewFinder.current.scanRegion = props.scanRegion;
+    viewFinder.current.width = props.width;
+    viewFinder.current.height = props.height;
+  },[props.scanRegion, props.width, props.height])
 
   React.useEffect(()=>{
     if (props.preserveAspectRatio) {

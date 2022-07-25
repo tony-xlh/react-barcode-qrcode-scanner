@@ -18,8 +18,8 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
   const reader = React.useRef(null);
   const mounted = React.useRef(false);
   const decoding = React.useRef(false);
-  const [viewBox,setViewBox] = React.useState("0 0 1280 720");
-  const [barcodeResults,setBarcodeResults] = React.useState([] as TextResult[]);
+  const [viewBox, setViewBox] = React.useState("0 0 1280 720");
+  const [barcodeResults, setBarcodeResults] = React.useState([] as TextResult[]);
   
   React.useEffect(()=>{
     const init = async () => {
