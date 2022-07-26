@@ -149,6 +149,7 @@ function App() {
                 right={right}
                 bottom={bottom}
                 preserveAspectRatio="xMidYMid slice"
+                style={{"--scan-line-color":"red","--scan-rect-color":"green"}}
               >
               </ViewFinder>
             }

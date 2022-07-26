@@ -10,6 +10,7 @@ export const ViewFinder = (props) => {
       height={props.height}
       width={props.width}
       preserve-aspect-ratio={props.preserveAspectRatio}
+      style={props.style}
     >
     </view-finder>
   );
