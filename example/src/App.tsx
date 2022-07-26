@@ -22,7 +22,10 @@ function App() {
   const [currentResolution, setCurrentResolution] = React.useState("");
   const [currentVideoWidth, setCurrentVideoWidth] = React.useState(1280);
   const [currentVideoHeight, setCurrentVideoHeight] = React.useState(720);
-  const [scanRegion, setScanRegion] = React.useState({"left":200,"top":200,"width":200,"height":200});
+  const [left, setLeft] = React.useState(0);
+  const [right, setRight] = React.useState(0);
+  const [bottom, setBottom] = React.useState(0);
+  const [top, setTop] = React.useState(0);
   const reader = React.useRef(null as null | BarcodeReader);
   const resSel = React.useRef(null);
   const camSel = React.useRef(null);
@@ -51,24 +54,25 @@ function App() {
       w = cam.videoWidth*0.70;
       h = cam.videoHeight*0.4;
     }
-    const region = {"left":x,"top":y,"width":w,"height":h};
-    console.log(region)
-    setScanRegion(region);
-    updateRuntimeSettingsForScanRegion(region);
+    setLeft(x);
+    setTop(y);
+    setRight(x+w);
+    setBottom(y+h);
+    updateRuntimeSettingsForScanRegion(x,y,x+w,y+h);
   }
 
-  const updateRuntimeSettingsForScanRegion = async (region:{left:number,top:number,width:number,height:number}) => {
+  const updateRuntimeSettingsForScanRegion = async (left:number,top:number,right:number,bottom:number) => {
     if (reader.current) {
       const settings = await reader.current.getRuntimeSettings();
-      settings.region.regionLeft = region.left;
-      settings.region.regionTop = region.top;
-      settings.region.regionBottom = region.top + region.height;
-      settings.region.regionRight = region.left + region.width;
+      settings.region.regionLeft = left;
+      settings.region.regionTop = top;
+      settings.region.regionBottom = bottom;
+      settings.region.regionRight = right;
       settings.region.regionMeasuredByPercentage = 0;
       await reader.current.updateRuntimeSettings(settings);
     }else{
       console.log("waiting for barcode reader to be initialized.")
-      setTimeout(updateRuntimeSettingsForScanRegion,500,region);
+      setTimeout(updateRuntimeSettingsForScanRegion,500,left,top,right,bottom);
     }
   }
 
@@ -140,8 +144,11 @@ function App() {
                 ref={viewFinder}
                 width={currentVideoWidth}
                 height={currentVideoHeight}
+                left={left}
+                top={top}
+                right={right}
+                bottom={bottom}
                 preserveAspectRatio="xMidYMid slice"
-                scanRegion={scanRegion}
               >
               </ViewFinder>
             }
