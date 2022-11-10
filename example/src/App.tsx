@@ -138,6 +138,7 @@ function App() {
             onClicked={onClicked}
             onDeviceListLoaded={onDeviceListLoaded}
             onInitialized={onInitialized}
+            engineResourcePath="https://unpkg.com/dynamsoft-javascript-barcode@9.3.1/dist/"
           >
             {((initialized && opened) && isActive) &&
               <ViewFinder 
