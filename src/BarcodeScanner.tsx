@@ -5,6 +5,7 @@ import { CameraProps, VisionCamera } from 'react-vision-camera';
 export interface ScannerProps extends CameraProps{
   runtimeSettings?: string;
   license?: string;
+  engineResourcePath?: string;
   interval?:number;
   drawOverlay?: boolean;
   onInitialized?: (reader:BarcodeReader) => void;
@@ -28,7 +29,12 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
       }else{
         BarcodeReader.license = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ=="; // public trial license
       }
-      BarcodeReader.engineResourcePath = "https://unpkg.com/dynamsoft-javascript-barcode@9.0.2/dist/";
+      if (props.engineResourcePath) {
+        BarcodeReader.engineResourcePath = props.engineResourcePath;
+      }else{
+        BarcodeReader.engineResourcePath = "https://unpkg.com/dynamsoft-javascript-barcode@latest/dist/";
+      }
+      
       reader.current = await BarcodeReader.createInstance();
       if (props.runtimeSettings) {
         await (reader.current as BarcodeReader).initRuntimeSettingsWithString(props.runtimeSettings);
