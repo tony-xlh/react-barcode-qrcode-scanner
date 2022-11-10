@@ -10,6 +10,7 @@
     "@types/node": "^16.11.43",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "dynamsoft-javascript-barcode": "^9.3.1",
     "react": "^18.2.0",
     "react-barcode-qrcode-scanner": "file:..",
     "react-dom": "^18.2.0",
