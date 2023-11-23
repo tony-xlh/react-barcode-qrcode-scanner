@@ -24,15 +24,17 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
   
   React.useEffect(()=>{
     const init = async () => {
-      if (props.license) {
-        BarcodeReader.license = props.license;
-      }else{
-        BarcodeReader.license = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ=="; // public trial license
-      }
-      if (props.engineResourcePath) {
-        BarcodeReader.engineResourcePath = props.engineResourcePath;
-      }else{
-        BarcodeReader.engineResourcePath = "https://unpkg.com/dynamsoft-javascript-barcode@latest/dist/";
+      if (BarcodeReader.isWasmLoaded() === false) {
+        if (props.license) {
+          BarcodeReader.license = props.license;
+        }else{
+          BarcodeReader.license = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ=="; // public trial license
+        }
+        if (props.engineResourcePath) {
+          BarcodeReader.engineResourcePath = props.engineResourcePath;
+        }else{
+          BarcodeReader.engineResourcePath = "https://unpkg.com/dynamsoft-javascript-barcode@latest/dist/";
+        }
       }
       
       reader.current = await BarcodeReader.createInstance();
@@ -54,6 +56,7 @@ const BarcodeScanner = (props:ScannerProps): React.ReactElement => {
   },[props.runtimeSettings])
 
   const startScanning = () => {
+    stopScanning();
     const decode = async () => {
       if (decoding.current === false && reader.current && camera.current) {
         decoding.current = true;
