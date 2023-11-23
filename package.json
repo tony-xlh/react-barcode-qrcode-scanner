@@ -15,6 +15,10 @@
     "type": "git",
     "url": "git+https://github.com/xulihang/react-barcode-qrcode-scanner.git"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
   "keywords": [
     "barcode",
     "qrcode",
