@@ -12,7 +12,7 @@
     "@types/react-dom": "^18.0.6",
     "dynamsoft-javascript-barcode": "^9.3.1",
     "react": "^18.2.0",
-    "react-barcode-qrcode-scanner": "file:..",
+    "react-barcode-qrcode-scanner": "^0.1.2",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.7.4",
