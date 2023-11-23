@@ -29,7 +29,6 @@ function App() {
   const reader = React.useRef(null as null | BarcodeReader);
   const resSel = React.useRef(null);
   const camSel = React.useRef(null);
-  const viewFinder = React.useRef(null);
   const onOpened = (cam:HTMLVideoElement,camLabel:string) => {
     console.log("opened");
     console.log(camLabel);
@@ -142,7 +141,6 @@ function App() {
           >
             {((initialized && opened) && isActive) &&
               <ViewFinder 
-                ref={viewFinder}
                 width={currentVideoWidth}
                 height={currentVideoHeight}
                 left={left}
