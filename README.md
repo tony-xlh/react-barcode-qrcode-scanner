@@ -1,5 +1,9 @@
 # react-barcode-qrcode-scanner
 
+![version](https://img.shields.io/npm/v/react-barcode-qrcode-scanner.svg)
+![downloads](https://img.shields.io/npm/dm/react-barcode-qrcode-scanner.svg)
+![jsdelivr](https://img.shields.io/jsdelivr/npm/hm/react-barcode-qrcode-scanner.svg)
+
 Barcode and QR Code Scanner Component for React. It uses [react-vision-camera](https://github.com/xulihang/react-vision-camera) to access the camera and [Dynamsoft Barcode Reader](https://www.dynamsoft.com/barcode-reader/overview/) to read barcodes.
 
 
