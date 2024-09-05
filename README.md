@@ -82,6 +82,10 @@ How to specify which camera to use?
 
 You can use the two props together. `facingMode` has a higher priority.
 
+### Blog
+
+[How to Create a React Barcode and QR Code Scanning Library](https://www.dynamsoft.com/codepool/react-barcode-qr-code-scanner-library.html)
+
 ### License
 
 MIT
